@@ -28,7 +28,7 @@ import * as Constants from '../reactArkus/src/constant/Constants';
 
 function testFetch() {
   let timeStamp = Math.floor(Date.now() / 1000);
-  let url = Constants.URL;
+  let url = Constants.URL + Constants.GET_PRODUCTS;
   let ck = Constants.CLIENT_KEY;
   let cs = Constants.CLIENT_SECRET;
   let method = Constants.ENCRYPTION_METHOD;
