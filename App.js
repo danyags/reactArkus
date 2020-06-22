@@ -24,7 +24,33 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import * as Constants from '../reactArkus/src/constant/Constants';
+
+function testFetch() {
+  let timeStamp = Math.floor(Date.now() / 1000);
+  let url = Constants.URL;
+  let ck = Constants.CLIENT_KEY;
+  let cs = Constants.CLIENT_SECRET;
+  let method = Constants.ENCRYPTION_METHOD;
+  let base_str = 'GET&' + encodeURIComponent(url) + '&' + encodeURIComponent('oauth_consumer_key=' + ck + '&oauth_nonce=' + timeStamp + '&oauth_signature_method='+ method + '&oauth_timestamp=' + timeStamp);
+  var hmacsha1 = require('hmacsha1');
+  var hash = hmacsha1(cs + '&', base_str);
+  let urlFetch = url + '?oauth_consumer_key=' + ck + '&oauth_signature_method=' + method + '&oauth_timestamp=' + timeStamp + '&oauth_nonce=' + timeStamp + '&oauth_signature=' + hash
+
+  fetch(urlFetch, {
+    method: 'GET',
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      alert(JSON.stringify(response));
+    })
+    .catch((error) => {
+      alert(error);
+    });
+}
+
 const App: () => React$Node = () => {
+  React.useEffect(() => testFetch(), []);
   return (
     <>
       <StatusBar barStyle="dark-content" />
