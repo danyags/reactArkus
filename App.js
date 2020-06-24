@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -25,75 +26,30 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import * as Constants from '../reactArkus/src/constant/Constants';
+import LoadingScreen from './src/components/LoadingScreen';
+import ContainerScreen from './src/components/ContainerScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-function testFetch() {
-  let timeStamp = Math.floor(Date.now() / 1000);
-  let url = Constants.URL + Constants.GET_PRODUCTS;
-  let ck = Constants.CLIENT_KEY;
-  let cs = Constants.CLIENT_SECRET;
-  let method = Constants.ENCRYPTION_METHOD;
-  let base_str = 'GET&' + encodeURIComponent(url) + '&' + encodeURIComponent('oauth_consumer_key=' + ck + '&oauth_nonce=' + timeStamp + '&oauth_signature_method='+ method + '&oauth_timestamp=' + timeStamp);
-  var hmacsha1 = require('hmacsha1');
-  var hash = hmacsha1(cs + '&', base_str);
-  let urlFetch = url + '?oauth_consumer_key=' + ck + '&oauth_signature_method=' + method + '&oauth_timestamp=' + timeStamp + '&oauth_nonce=' + timeStamp + '&oauth_signature=' + hash
+const Stack = createStackNavigator();
 
-  fetch(urlFetch, {
-    method: 'GET',
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      alert(JSON.stringify(response));
-    })
-    .catch((error) => {
-      alert(error);
-    });
-}
-
-const App: () => React$Node = () => {
-  React.useEffect(() => testFetch(), []);
+const App: (navigation) => React$Node = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <NavigationContainer>
+        <Stack.Navigator>
+          {/*<Stack.Screen
+            name="LoadingScreen"
+            component={LoadingScreen}
+            options={{headerShown: false}}
+          />*/}
+          <Stack.Screen
+            name="ContainerScreen"
+            component={ContainerScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 };

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 //HOST VALUES
 export const URL = 'http://itluma.com/';
 export const CLIENT_KEY = 'ck_0dc52c14d952b11413af77c6b969149cc97f866e';
