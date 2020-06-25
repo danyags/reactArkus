@@ -2,14 +2,32 @@
 //import libraries
 import React from 'react';
 import {StyleSheet, SafeAreaView, FlatList, View, Image} from 'react-native';
-import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner} from '@ui-kitten/components';
+import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
+
+const cartIcon = (props) =>(
+  //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
+  <Icon {...props} name='shopping-cart-outline'/>
+);
+
+const MenuIcon = (props) => (
+  <Icon {...props} name='more-vertical'/>
+);
+
+const InfoIcon = (props) => (
+  <Icon {...props} name='info'/>
+);
+
+const checkOutIcon = (props) => (
+  <Icon {...props} name='checkmark-outline'/>
+);
 
 // create a component
 const MainScreen = () => {
   const [dataProducts, setdataProducts] = React.useState([]);
   const [page, setPage] = React.useState(1);
+  const [menuVisible, setMenuVisible] = React.useState(false);
 
   const getProducts = async => {
       let timeStamp = Math.floor(Date.now() / 1000);
@@ -35,10 +53,25 @@ const MainScreen = () => {
       });
   };
 
-  const cartIcon = (props) =>{
-    //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
-    return <Icon {...props} name='shopping-cart-outline'/>
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
   };
+
+  const renderMenuAction = () => (
+    <TopNavigationAction icon={MenuIcon} onPress={toggleMenu}/>
+  );
+
+  const renderRightActions = () => (
+    <React.Fragment>
+      <OverflowMenu
+        anchor={renderMenuAction}
+        visible={menuVisible}
+        onBackdropPress={toggleMenu}>
+        <MenuItem accessoryLeft={cartIcon} title="My cart" />
+        <MenuItem accessoryLeft={checkOutIcon} title="Checkout" />
+      </OverflowMenu>
+    </React.Fragment>
+  );
 
   React.useEffect(()=>{
       getProducts();
@@ -46,7 +79,7 @@ const MainScreen = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <IconRegistry icons={EvaIconsPack} />
-      <TopNavigation title="Woocomerce shop" alignment="center" />
+      <TopNavigation title='Woocomerce' subtitle='Shop' alignment='center' accessoryRight={renderRightActions}/>
       <Divider />
       {dataProducts.length > 0 ? (
         <Layout>
