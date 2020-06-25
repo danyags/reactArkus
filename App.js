@@ -25,9 +25,13 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import * as eva from '@eva-design/eva';
+import {ApplicationProvider, Layout} from '@ui-kitten/components';
+
 import * as Constants from '../reactArkus/src/constant/Constants';
 import LoadingScreen from './src/components/LoadingScreen';
 import ContainerScreen from './src/components/ContainerScreen';
+import MainScreen from './src/components/MainScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -36,20 +40,22 @@ const Stack = createStackNavigator();
 const App: (navigation) => React$Node = () => {
   return (
     <>
-      <NavigationContainer>
-        <Stack.Navigator>
-          {/*<Stack.Screen
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            {/*<Stack.Screen
             name="LoadingScreen"
             component={LoadingScreen}
             options={{headerShown: false}}
           />*/}
-          <Stack.Screen
-            name="ContainerScreen"
-            component={ContainerScreen}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name="MainScreen"
+              component={MainScreen}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ApplicationProvider>
     </>
   );
 };
