@@ -32,6 +32,7 @@ import * as Constants from '../reactArkus/src/constant/Constants';
 import LoadingScreen from './src/components/LoadingScreen';
 import ContainerScreen from './src/components/ContainerScreen';
 import MainScreen from './src/components/MainScreen';
+import ShoppingCartScreen from './src/components/ShoppingCartScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -51,6 +52,11 @@ const App: (navigation) => React$Node = () => {
             <Stack.Screen
               name="MainScreen"
               component={MainScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="ShoppingCartScreen"
+              component={ShoppingCartScreen}
               options={{headerShown: false}}
             />
           </Stack.Navigator>
