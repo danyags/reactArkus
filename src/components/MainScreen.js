@@ -5,6 +5,7 @@ import {StyleSheet, SafeAreaView, FlatList, View, Image} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
+import Details from '../screens/Details';
 
 const cartIcon = (props) =>(
   //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
@@ -24,7 +25,7 @@ const checkOutIcon = (props) => (
 );
 
 // create a component
-const MainScreen = () => {
+const MainScreen  = ({navigation})  => {
   const [dataProducts, setdataProducts] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [menuVisible, setMenuVisible] = React.useState(false);
@@ -82,25 +83,30 @@ const MainScreen = () => {
       <TopNavigation title='Woocomerce' subtitle='Shop' alignment='center' accessoryRight={renderRightActions}/>
       <Divider />
       {dataProducts.length > 0 ? (
-        <Layout>
-          <View>
+        <Layout >
+          <View  >
             <FlatList
               data={dataProducts}
               numColumns={2}
               renderItem={({item}) => (
-                <View style={{flex: 1, flexDirection: 'row', padding: 5}}>
+                <View style={{flex: 1, flexDirection: 'row', padding: 5}}  >
                   <View
                     style={{width: '100%',height: 250,backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5,}}>
                     <View
-                      style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}}>
+                      style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}} >
                       <Image
                         source={{uri: item.images[0].src}}
                         style={styles.image}
                       />
                     </View>
-                    <Text style={{textAlign: 'center'}} category="h6">
+                    <Text
+                        onPress={() => {
+                            navigation.navigate('Details', {
+                                item: item,})}}
+                        style={{textAlign: 'center'}} category="h6" >
                       {item.name}
                     </Text>
+                      {/*<Details name={item.name}/>*/}
                     <Text style={{textAlign: 'center'}} category="s2">
                       $ {item.price}
                     </Text>

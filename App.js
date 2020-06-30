@@ -31,6 +31,7 @@ import {ApplicationProvider, Layout} from '@ui-kitten/components';
 import * as Constants from '../reactArkus/src/constant/Constants';
 import LoadingScreen from './src/components/LoadingScreen';
 import ContainerScreen from './src/components/ContainerScreen';
+import Details from './src/screens/Details';
 import MainScreen from './src/components/MainScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -53,6 +54,11 @@ const App: (navigation) => React$Node = () => {
               component={MainScreen}
               options={{headerShown: false}}
             />
+              <Stack.Screen
+                  name="Details"
+                  component={Details}
+                  options={{headerShown: false}}
+              />
           </Stack.Navigator>
         </NavigationContainer>
       </ApplicationProvider>
