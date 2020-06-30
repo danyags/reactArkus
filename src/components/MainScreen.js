@@ -164,7 +164,7 @@ const MainScreen = ({navigation}) => {
       {
         await AsyncStorage.setItem('shopCart',JSON.stringify(cart));
         t = JSON.parse(await AsyncStorage.getItem('shopCart'));
-        console.log('CART ' + t.length);
+        //console.log('CART ' + t.length);
       }
       else
       {
@@ -178,12 +178,19 @@ const MainScreen = ({navigation}) => {
     };
     storeProduct(cart.length);
 
-    console.log('Products=' + cart.length);
+    //console.log('Products=' + cart.length);
   }, [cart]);
 
   React.useEffect(()=>{
     const initVars = async () =>{
       await AsyncStorage.setItem('startShopping','yes');
+      let productsList = JSON.parse(await AsyncStorage.getItem('shopCart'));
+      if (productsList !== null)
+      {
+        //dataProducts(...dataProducts,Object.values(productsList));
+        //console.log("ASYNC PROD => " + productsList.length);
+        setCart(...cart,productsList);
+      }
     };
     initVars();
     getProducts(page);
@@ -215,7 +222,7 @@ const MainScreen = ({navigation}) => {
                       {item.name}
                     </Text>
                     <Text style={{textAlign: 'center'}} category="s2">
-                      $ {item.price}
+                      $ {Number.parseFloat(item.price).toFixed(2)}
                     </Text>
                     <Text style={{textAlign: 'center'}} category="s2">
                       &nbsp;
