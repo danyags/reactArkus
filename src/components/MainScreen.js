@@ -5,7 +5,7 @@ import {StyleSheet, SafeAreaView, FlatList, View, Image} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
-import Details from '../screens/Details';
+import Details from './Details';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const cartIcon = (props) =>(
@@ -210,11 +210,14 @@ const MainScreen  = ({navigation})  => {
               numColumns={2}
               renderItem={({item}) => (
                 <View style={{flex: 1, flexDirection: 'row', padding: 5}}>
-                  <View
+                  <View onPress={() => {
+                      navigation.navigate('Details', {
+                          item: item,})}}
                     style={{width: '100%',height: 250,backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5,}}>
                     <View
                       style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}}>
                       <Image
+
                         source={{uri: item.images[0].src}}
                         style={styles.image}
                       />

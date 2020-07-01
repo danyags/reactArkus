@@ -31,7 +31,7 @@ import {ApplicationProvider, Layout} from '@ui-kitten/components';
 import * as Constants from '../reactArkus/src/constant/Constants';
 import LoadingScreen from './src/components/LoadingScreen';
 import ContainerScreen from './src/components/ContainerScreen';
-import Details from './src/screens/Details';
+import Details from './src/components/Details';
 import MainScreen from './src/components/MainScreen';
 import ShoppingCartScreen from './src/components/ShoppingCartScreen';
 import {NavigationContainer} from '@react-navigation/native';
