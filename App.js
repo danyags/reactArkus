@@ -37,36 +37,41 @@ import ShoppingCartScreen from './src/components/ShoppingCartScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {CartContext} from './src/constant/Context';
+
 const Stack = createStackNavigator();
 
 const App: (navigation) => React$Node = () => {
+  const [shoppingCart, setShoppingCart] = React.useState([]);
   return (
     <>
       <ApplicationProvider {...eva} theme={eva.light}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            {/*<Stack.Screen
-            name="LoadingScreen"
-            component={LoadingScreen}
-            options={{headerShown: false}}
-          />*/}
-            <Stack.Screen
-              name="MainScreen"
-              component={MainScreen}
+        <CartContext.Provider value={[shoppingCart, setShoppingCart]}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              {/*<Stack.Screen
+              name="LoadingScreen"
+              component={LoadingScreen}
               options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="ShoppingCartScreen"
-              component={ShoppingCartScreen}
-              options={{headerShown: false}}
-            />
+            />*/}
               <Stack.Screen
-                  name="Details"
-                  component={Details}
-                  options={{headerShown: false}}
+                name="MainScreen"
+                component={MainScreen}
+                options={{headerShown: false}}
               />
-          </Stack.Navigator>
-        </NavigationContainer>
+              <Stack.Screen
+                name="ShoppingCartScreen"
+                component={ShoppingCartScreen}
+                options={{headerShown: false}}
+              />
+                <Stack.Screen
+                    name="Details"
+                    component={Details}
+                    options={{headerShown: false}}
+                />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </CartContext.Provider>
       </ApplicationProvider>
     </>
   );

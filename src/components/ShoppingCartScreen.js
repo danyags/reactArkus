@@ -7,6 +7,7 @@ import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinne
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
 import AsyncStorage from '@react-native-community/async-storage';
+import {CartContext} from '../constant/Context';
 
 const BackIcon = (props) => (
     <Icon {...props} name='arrow-back'/>
@@ -26,12 +27,9 @@ const ShoppingCartScreen = ({navigation}) => {
     const [total, setTotal] = React.useState(0);
     const [loading, setLoading] = React.useState(true);
     const [visibleModal, setVisibleModal] = React.useState(false);
+    const [shoppingCart, setShoppingCart] = React.useContext(CartContext);
 
   const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={()=>backAction()}/>;
-  /*const data = new Array(8).fill({
-    title: 'Item',
-    description: 'Description for Item',
-  });*/
 
   const backAction = () =>{
     navigation.goBack();
@@ -46,6 +44,7 @@ const ShoppingCartScreen = ({navigation}) => {
 
   const clearCart = async () =>{
     setdataProducts([]);
+    setShoppingCart([]);
     await AsyncStorage.setItem('shopCart','');
     await AsyncStorage.setItem('startShopping','clear');
     await AsyncStorage.setItem('purchased','yes');
@@ -89,10 +88,6 @@ const ShoppingCartScreen = ({navigation}) => {
           clearCart();
           setVisibleModal(true);
         }
-        /*else
-        {
-          alert('NO');
-        }*/
     })
     .catch((error) => {
         alert(error);
@@ -112,19 +107,13 @@ const ShoppingCartScreen = ({navigation}) => {
               r[a.id].push(a);
               return r;
             }, {});
-
             let products = Object.values(result);
-
             for (var i = 0; i < products.length; i++)
             {
               t = parseFloat(t) + (parseFloat(products[i].length) * parseFloat(products[i][0].price));
             }
-
             setTotal(Number.parseFloat(t).toFixed(2));
-
-            //setdataProducts(...dataProducts,JSON.parse(await AsyncStorage.getItem('shopCart')));
             setdataProducts(...dataProducts,products);
-            //console.log(await AsyncStorage.getItem('shopCart'));
           }
           setLoading(false);
         }
@@ -159,17 +148,9 @@ const ShoppingCartScreen = ({navigation}) => {
             renderItem={({item}) => (
               <View>
                 <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    padding: 15,
-                    backgroundColor: '#FFF',
-                  }}>
+                  style={{flex: 1, flexDirection: 'row', padding: 15, backgroundColor: '#FFF'}}>
                   <View style={{width: '30%'}}>
-                    <Image
-                      source={{uri: item[0].images[0].src}}
-                      style={styles.image}
-                    />
+                    <Image source={{uri: item[0].images[0].src}} style={styles.image}/>
                   </View>
                   <View style={{width: '70%'}}>
                     <Text>Product: {item[0].name}</Text>
@@ -185,12 +166,7 @@ const ShoppingCartScreen = ({navigation}) => {
             keyExtractor={(item) => String(item[0].id)}
             ListFooterComponent={
               <View>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    backgroundColor: '#FFF',
-                  }}>
+                <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#FFF'}}>
                   <View style={{width: '70%'}}>
                     <Text status="basic" style={{textAlign: 'right'}}>
                       TOTAL:
@@ -202,12 +178,7 @@ const ShoppingCartScreen = ({navigation}) => {
                     </Text>
                   </View>
                 </View>
-                <View
-                  style={{
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    paddingTop: 15,
-                  }}>
+                <View style={{alignContent: 'center', alignItems: 'center', paddingTop: 15}}>
                   <Button
                     status="basic"
                     appearance="outline"
@@ -234,8 +205,7 @@ const ShoppingCartScreen = ({navigation}) => {
           </Button>
         </Layout>
       ) : (
-        <Layout
-          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Spinner status="info" size="giant" />
         </Layout>
       )}

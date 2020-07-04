@@ -7,6 +7,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
 import Details from './Details';
 import AsyncStorage from '@react-native-community/async-storage';
+import {CartContext} from '../constant/Context';
 
 const cartIcon = (props) =>(
   //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
@@ -35,6 +36,7 @@ const MainScreen  = ({navigation})  => {
   const [page, setPage] = React.useState(1);
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [cart,setCart] = React.useState([]);
+  const [shoppingCart, setShoppingCart] = React.useContext(CartContext);
 
   const getProducts = async (p) => {
       let timeStamp = Math.floor(Date.now() / 1000);
@@ -53,7 +55,6 @@ const MainScreen  = ({navigation})  => {
       .then((response) => response.json())
       .then((response) => {
           setdataProducts([...dataProducts,...response]);
-          //alert(JSON.stringify(response));
       })
       .catch((error) => {
           alert(error);
@@ -61,33 +62,14 @@ const MainScreen  = ({navigation})  => {
   };
 
   const addToCart = async (i) => {
-    setCart([...cart,i]);
+    setShoppingCart([...shoppingCart,i]);
     await AsyncStorage.setItem('startShopping','add');
-    /*try {
-      let products = JSON.stringify(cart);
-      await AsyncStorage.setItem('shopCart',products);
-      let t = JSON.parse(await AsyncStorage.getItem('shopCart'));
-      console.log('TOTAL CART = ' + t.length);
-      //console.log(await AsyncStorage.getItem('shopCart'));
-    }
-    catch (e){
-      console.log("Error addStorage=" + e);
-    }*/
   };
 
   const clearCart = async () =>{
-    setCart([]);
+    setShoppingCart([]);
     await AsyncStorage.setItem('startShopping','clear');
     toggleMenu();
-    //await AsyncStorage.removeItem('addedProduct');
-    /*try {
-      let products = '';
-      await AsyncStorage.setItem('shopCart',products);
-      //console.log(await AsyncStorage.getItem('shopCart'));
-    }
-    catch (e){
-      console.log("Error clearStorage=" + e);
-    }*/
   };
 
   const toggleMenu = () => {
@@ -116,56 +98,12 @@ const MainScreen  = ({navigation})  => {
     </React.Fragment>
   );
 
-  React.useEffect(() => {
-    /*const addToStorage = async () =>{
-      let t;
-      try {
-        let products = JSON.stringify(cart);
-        await AsyncStorage.setItem('shopCart',products);
-        t = JSON.parse(await AsyncStorage.getItem('shopCart'));
-        console.log(t.length);
-      }
-      catch (e) {
-        console.log("Error AsyncStorage=" + e);
-      }
-    };
-    addToStorage();*/
-
-    /*const storageProduct = async () =>{
-      let valueShop;
-      let t;
-      try {
-        valueShop = await AsyncStorage.getItem('startShopping');
-        if (valueShop !== null && valueShop === 'add' && cart.length > 0)
-        {
-          let products = JSON.stringify(cart);
-          await AsyncStorage.setItem('shopCart',products);
-          t = JSON.parse(await AsyncStorage.getItem('shopCart'));
-          console.log('CART ' + t.length);
-        }
-        else
-        {
-          await AsyncStorage.setItem('shopCart','');
-          t = JSON.parse(await AsyncStorage.getItem('shopCart'));
-          console.log('CART ' + t);
-        }
-      }
-      catch (e) {
-        console.log("Error cart hook => " + e);
-      }
-    };*/
-
-    //if (cart.length > 0) {storageProduct();}
-    //storageProduct();
-
+  React.useEffect(()=>{
     const storeProduct = async (totProd) =>{
-      let t;
       let valueShop;
       if (totProd > 0 )
       {
-        await AsyncStorage.setItem('shopCart',JSON.stringify(cart));
-        t = JSON.parse(await AsyncStorage.getItem('shopCart'));
-        //console.log('CART ' + t.length);
+        await AsyncStorage.setItem('shopCart',JSON.stringify(shoppingCart));
       }
       else
       {
@@ -173,14 +111,11 @@ const MainScreen  = ({navigation})  => {
         if (valueShop !== null && valueShop === 'clear')
         {
           await AsyncStorage.setItem('shopCart','');
-          console.log("Empty cart");
         }
       }
     };
-    storeProduct(cart.length);
-
-    //console.log('Products=' + cart.length);
-  }, [cart]);
+    storeProduct(shoppingCart.length);
+  },[shoppingCart]);
 
   React.useEffect(()=>{
     const initVars = async () =>{
@@ -188,14 +123,13 @@ const MainScreen  = ({navigation})  => {
       let productsList = JSON.parse(await AsyncStorage.getItem('shopCart'));
       if (productsList !== null)
       {
-        //dataProducts(...dataProducts,Object.values(productsList));
-        //console.log("ASYNC PROD => " + productsList.length);
-        setCart(...cart,productsList);
+        setShoppingCart(...shoppingCart,productsList);
       }
     };
     initVars();
     getProducts(page);
   },[]);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <IconRegistry icons={EvaIconsPack} />
@@ -204,29 +138,17 @@ const MainScreen  = ({navigation})  => {
       {dataProducts.length > 0 ? (
         <Layout>
           <View>
-            {/*<Text onPress={()=>clearCart()}>HOLA</Text>*/}
             <FlatList
               data={dataProducts}
+              contentContainerStyle={{paddingBottom: 70}}
               numColumns={2}
               renderItem={({item}) => (
                 <View style={{flex: 1, flexDirection: 'row', padding: 5}}>
-                  <View onPress={() => {
-                      navigation.navigate('Details', {
-                          item: item,})}}
-                    style={{width: '100%',height: 250,backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5,}}>
-                    <View
-                      style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}}>
-                      <Image
-
-                        source={{uri: item.images[0].src}}
-                        style={styles.image}
-                      />
+                  <View onPress={() => { navigation.navigate('Details', {item: item});}} style={{width: '100%',height: 250,backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5}}>
+                    <View style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}}>
+                      <Image source={{uri: item.images[0].src}} style={styles.image}/>
                     </View>
-                    <Text
-                        onPress={() => {
-                            navigation.navigate('Details', {
-                                item: item,})}}
-                        style={{textAlign: 'center'}} category="h6" >
+                    <Text onPress={() => {navigation.navigate('Details', {item: item});}} style={{textAlign: 'center'}} category="h6" >
                       {item.name}
                     </Text>
                     <Text style={{textAlign: 'center'}} category="s2">
