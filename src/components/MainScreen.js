@@ -8,6 +8,7 @@ import * as Constants from '../constant/Constants';
 import Details from './Details';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CartContext} from '../constant/Context';
+import analytics from '@react-native-firebase/analytics';
 
 const cartIcon = (props) =>(
   //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
@@ -128,6 +129,11 @@ const MainScreen  = ({navigation})  => {
     };
     initVars();
     getProducts(page);
+    analytics().logEvent('openApp',
+    {
+      Event: 'Open app',
+      description: 'Load products',
+    });
   },[]);
 
   return (
