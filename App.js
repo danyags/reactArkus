@@ -65,6 +65,7 @@ const App: (navigation) => React$Node = () => {
                   component={Details}
                   options={{headerShown: false}}
               />
+
           </Stack.Navigator>
         </NavigationContainer>
       </ApplicationProvider>
