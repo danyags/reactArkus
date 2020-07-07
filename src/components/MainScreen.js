@@ -38,28 +38,39 @@ const MainScreen  = ({navigation})  => {
   const [menuVisible, setMenuVisible] = React.useState(false);
   const [cart,setCart] = React.useState([]);
   const [shoppingCart, setShoppingCart] = React.useContext(CartContext);
+  const [pendingProcess, setPendingProcess] = React.useState(true);
+  const [loadmore, setLoadmore] = React.useState(false);
+  const [refresh, setRefresh] = React.useState(false);
 
   const getProducts = async (p) => {
-      let timeStamp = Math.floor(Date.now() / 1000);
-      let url = Constants.URL + Constants.GET_PRODUCTS;
-      let ck = Constants.CLIENT_KEY;
-      let cs = Constants.CLIENT_SECRET;
-      let method = Constants.ENCRYPTION_METHOD;
-      let base_str = 'GET&' + encodeURIComponent(url) + '&' + encodeURIComponent('oauth_consumer_key=' + ck + '&oauth_nonce=' + timeStamp + '&oauth_signature_method='+ method + '&oauth_timestamp=' + timeStamp + '&page=' + parseInt(p));
-      var hmacsha1 = require('hmacsha1');
-      var hash = hmacsha1(cs + '&', base_str);
-      let urlFetch = url + '?oauth_consumer_key=' + ck + '&oauth_signature_method=' + method + '&oauth_timestamp=' + timeStamp + '&oauth_nonce=' + timeStamp + '&oauth_signature=' + hash;
+    let timeStamp = Math.floor(Date.now() / 1000);
+    let url = Constants.URL + Constants.GET_PRODUCTS;
+    let ck = Constants.CLIENT_KEY;
+    let cs = Constants.CLIENT_SECRET;
+    let method = Constants.ENCRYPTION_METHOD;
+    let base_str = 'GET&' + encodeURIComponent(url) + '&' + encodeURIComponent('oauth_consumer_key=' + ck + '&oauth_nonce=' + timeStamp + '&oauth_signature_method='+ method + '&oauth_timestamp=' + timeStamp + '&page=' + parseInt(p));
+    var hmacsha1 = require('hmacsha1');
+    var hash = hmacsha1(cs + '&', base_str);
+    let urlFetch = url + '?oauth_consumer_key=' + ck + '&oauth_signature_method=' + method + '&oauth_timestamp=' + timeStamp + '&oauth_nonce=' + timeStamp + '&oauth_signature=' + hash;
 
-      fetch(urlFetch + '&page=' + parseInt(p), {
-        method: 'GET',
-      })
-      .then((response) => response.json())
-      .then((response) => {
-          setdataProducts([...dataProducts,...response]);
-      })
-      .catch((error) => {
-          alert(error);
-      });
+    await fetch(urlFetch + '&page=' + parseInt(p), {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.length > 0)
+      {
+        setdataProducts([...dataProducts,...response]);
+        setPendingProcess(true);
+      }
+      else
+      {
+        setPendingProcess(false);
+      }
+    })
+    .catch((error) => {
+        alert(error);
+    });
   };
 
   const addToCart = async (i) => {
@@ -82,6 +93,14 @@ const MainScreen  = ({navigation})  => {
     navigation.navigate('ShoppingCartScreen');
   };
 
+  const handleLoadMore = () => {
+    if (pendingProcess === true)
+    {
+      setPage(page + 1);
+    }
+
+  };
+
   const renderMenuAction = () => (
     <TopNavigationAction icon={MenuIcon} onPress={toggleMenu}/>
   );
@@ -98,6 +117,10 @@ const MainScreen  = ({navigation})  => {
       </OverflowMenu>
     </React.Fragment>
   );
+
+  React.useEffect(()=>{
+    getProducts(page);
+  },[page]);
 
   React.useEffect(()=>{
     const storeProduct = async (totProd) =>{
@@ -148,9 +171,11 @@ const MainScreen  = ({navigation})  => {
               data={dataProducts}
               contentContainerStyle={{paddingBottom: 70}}
               numColumns={2}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.1}
               renderItem={({item}) => (
                 <View style={{flex: 1, flexDirection: 'row', padding: 5}}>
-                  <View onPress={() => { navigation.navigate('Details', {item: item});}} style={{width: '100%',height: 250,backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5}}>
+                  <View onPress={() => { navigation.navigate('Details', {item: item});}} style={{width: '100%',backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5}}>
                     <View style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}}>
                       <Image source={{uri: item.images[0].src}} style={styles.image}/>
                     </View>
@@ -175,6 +200,7 @@ const MainScreen  = ({navigation})  => {
                 </View>
               )}
               keyExtractor={(item) => String(item.id)}
+              ListFooterComponent={pendingProcess === true ? <View style={{justifyContent: 'center', alignItems: 'center'}}><Spinner status='info' size='small'/></View> : null}
             />
           </View>
         </Layout>
