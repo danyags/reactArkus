@@ -177,13 +177,13 @@ const MainScreen  = ({navigation})  => {
                 <View style={{flex: 1, flexDirection: 'row', padding: 5}}>
                   <View onPress={() => { navigation.navigate('Details', {item: item});}} style={{width: '100%',backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5}}>
                     <View style={{alignContent: 'center',alignItems: 'center',marginTop: 5,}}>
-                      <Image source={{uri: item.images[0].src}} style={styles.image}/>
+                    <Image source={{uri: item.images.length > 0 ? item.images[0].src : 'https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png'}} style={styles.image}/>
                     </View>
                     <Text onPress={() => {navigation.navigate('Details', {item: item});}} style={{textAlign: 'center'}} category="h6" >
                       {item.name}
                     </Text>
                     <Text style={{textAlign: 'center'}} category="s2">
-                      $ {Number.parseFloat(item.price).toFixed(2)}
+                      $ {isNaN(Number.parseFloat(item.price).toFixed(2)) === false ? Number.parseFloat(item.price).toFixed(2) : Number.parseFloat(0).toFixed(2)}
                     </Text>
                     <Text style={{textAlign: 'center'}} category="s2">
                       &nbsp;
