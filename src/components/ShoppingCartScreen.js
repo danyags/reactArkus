@@ -3,11 +3,12 @@
 //import libraries
 import React from 'react';
 import {StyleSheet, SafeAreaView, FlatList, View, Image} from 'react-native';
-import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem, List, ListItem, Modal, Card} from '@ui-kitten/components';
+import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem, List, ListItem, Modal, Card, Input, Radio, RadioGroup} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CartContext} from '../constant/Context';
+import * as cmFunction from '../constant/CommonFunctions';
 
 const BackIcon = (props) => (
     <Icon {...props} name='arrow-back'/>
@@ -21,6 +22,9 @@ const checkOutIcon = (props) => (
   <Icon {...props} name='arrow-forward-outline'/>
 );
 
+var countries = [];
+const filterData = (item, query) => item.name.toLowerCase().includes(query.toLowerCase());
+
 // create a component
 const ShoppingCartScreen = ({navigation}) => {
     const [dataProducts, setdataProducts] = React.useState([]);
@@ -28,6 +32,7 @@ const ShoppingCartScreen = ({navigation}) => {
     const [loading, setLoading] = React.useState(true);
     const [visibleModal, setVisibleModal] = React.useState(false);
     const [shoppingCart, setShoppingCart] = React.useContext(CartContext);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={()=>backAction()}/>;
 
@@ -95,6 +100,18 @@ const ShoppingCartScreen = ({navigation}) => {
 
   };
 
+  const checkoutProduct = async () => {
+    setVisibleModal(true);
+    //Get countries
+    //var c = await cmFunction.fetchCountries();
+    countries = await cmFunction.fetchCountries();
+  };
+
+  const dataByCountry = async (codeCountry) => {
+    //Get locations by country
+    var cd = await cmFunction.getCountryData(codeCountry);
+  };
+
   React.useEffect(()=>{
     let t = 0;
     const getProducts = async () =>{
@@ -134,12 +151,47 @@ const ShoppingCartScreen = ({navigation}) => {
         accessoryLeft={renderBackAction}
       />
       <Divider />
-      <Modal visible={visibleModal}>
+
+      {/* MODAL FORM */}
+      <Modal visible={visibleModal} backdropStyle={styles.backdrop}>
         <Card disabled={true}>
-          <Text>Purchase order complete</Text>
-          <Button onPress={() => setVisibleModal(false)}>DISMISS</Button>
+          {/*<Text>Purchase order complete</Text>
+          <Button onPress={() => setVisibleModal(false)}>DISMISS</Button>*/}
+          <Text category='h6' style={styles.text}>Billing details</Text>
+          <View style={{flexDirection: 'row', backgroundColor: '#FFF'}}>
+            <View style={{width: '50%'}}>
+              <Input placeholder='First name' style={styles.input}/>
+            </View>
+            <View style={{width: '50%'}}>
+              <Input placeholder='Last name' style={styles.input}/>
+            </View>
+          </View>
+          <Input placeholder='Country / Region' style={styles.input}/>
+          <Input placeholder='Street address' style={styles.input}/>
+          <Input placeholder='Town / City' style={styles.input}/>
+          <Input placeholder='State / County' style={styles.input}/>
+          <Input placeholder='Postcode / ZIP' style={styles.input}/>
+          <View style={{flexDirection: 'row', backgroundColor: '#FFF'}}>
+            <View style={{width: '50%'}}>
+              <Input placeholder='Phone' style={styles.input}/>
+            </View>
+            <View style={{width: '50%'}}>
+              <Input placeholder='Email address ' style={styles.input}/>
+            </View>
+          </View>
+          <Text category='h6' style={styles.text}>Payment</Text>
+          <RadioGroup
+            selectedIndex={selectedIndex}
+            onChange={index => setSelectedIndex(index)}>
+            <Radio>Option 1</Radio>
+            <Radio>Option 2</Radio>
+            <Radio>Option 3</Radio>
+          </RadioGroup>
+          <Button onPress={() => setVisibleModal(false)}>Place order</Button>
         </Card>
       </Modal>
+      {/* END MODAL FORM */}
+
       {dataProducts.length > 0 && loading === false ? (
         <Layout>
           <FlatList
@@ -147,8 +199,7 @@ const ShoppingCartScreen = ({navigation}) => {
             data={dataProducts}
             renderItem={({item}) => (
               <View>
-                <View
-                  style={{flex: 1, flexDirection: 'row', padding: 15, backgroundColor: '#FFF'}}>
+                <View style={{flex: 1, flexDirection: 'row', padding: 15, backgroundColor: '#FFF'}}>
                   <View style={{width: '30%'}}>
                     <Image source={{uri: item[0].images[0].src}} style={styles.image}/>
                   </View>
@@ -183,7 +234,7 @@ const ShoppingCartScreen = ({navigation}) => {
                     status="basic"
                     appearance="outline"
                     accessoryRight={checkOutIcon}
-                    onPress={() => purchaseProduct(dataProducts)}>
+                    onPress={() => checkoutProduct()}>
                     Checkout
                   </Button>
                 </View>
@@ -227,7 +278,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#efefef',
-  }
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  input: {
+    flex: 1,
+    margin: 2,
+  },
+  text: {
+    margin: 2,
+  },
 });
 
 //make this component available to the app

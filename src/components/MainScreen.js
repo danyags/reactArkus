@@ -112,7 +112,7 @@ const MainScreen  = ({navigation})  => {
         visible={menuVisible}
         onBackdropPress={toggleMenu}>
         <MenuItem accessoryLeft={cartIcon} title="My cart" onPress={()=>goToMyCart()}/>
-        <MenuItem accessoryLeft={checkOutIcon} title="Checkout" />
+        {/*<MenuItem accessoryLeft={checkOutIcon} title="Checkout" />*/}
         <MenuItem accessoryLeft={clearIcon} title="Clear cart" onPress={()=>clearCart()}/>
       </OverflowMenu>
     </React.Fragment>
