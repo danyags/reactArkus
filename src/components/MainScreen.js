@@ -71,6 +71,7 @@ const MainScreen  = ({navigation})  => {
     .catch((error) => {
         alert(error);
     });
+    setRefresh(false);
   };
 
   const addToCart = async (i) => {
@@ -98,7 +99,13 @@ const MainScreen  = ({navigation})  => {
     {
       setPage(page + 1);
     }
+  };
 
+  const onRefresh = () => {
+    setdataProducts([]);
+    setPage(1);
+    setRefresh(true);
+    setPendingProcess(true);
   };
 
   const renderMenuAction = () => (
@@ -121,6 +128,13 @@ const MainScreen  = ({navigation})  => {
   React.useEffect(()=>{
     getProducts(page);
   },[page]);
+
+  React.useEffect(()=>{
+    if (refresh === true) { getProducts(page); }
+  },[refresh]);
+
+  React.useEffect(()=>{
+  },[dataProducts]);
 
   React.useEffect(()=>{
     const storeProduct = async (totProd) =>{
@@ -173,6 +187,8 @@ const MainScreen  = ({navigation})  => {
               numColumns={2}
               onEndReached={handleLoadMore}
               onEndReachedThreshold={0.1}
+              onRefresh={() => onRefresh()}
+              refreshing={refresh}
               renderItem={({item}) => (
                 <View style={{flex: 1, flexDirection: 'row', padding: 5}}>
                   <View onPress={() => { navigation.navigate('Details', {item: item});}} style={{width: '100%',backgroundColor: '#FFF',borderColor: '#bdbdbd',borderRadius: 5,borderWidth: 1,padding: 5}}>
