@@ -8,3 +8,5 @@ export const ENCRYPTION_METHOD = 'HMAC-SHA1';
 //API WOOCOMMERCE
 export const GET_PRODUCTS = 'wp-json/wc/v3/products';
 export const CREATE_ORDER = 'wp-json/wc/v3/orders';
+export const GET_COUNTRIES = 'wp-json/wc/v3/data/countries';
+export const GET_COUNTRY_DATA = 'wp-json/wc/v3/data/countries/'; // add country code
