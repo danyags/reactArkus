@@ -127,7 +127,8 @@ const ShoppingCartScreen = ({navigation}) => {
             let products = Object.values(result);
             for (var i = 0; i < products.length; i++)
             {
-              t = parseFloat(t) + (parseFloat(products[i].length) * parseFloat(products[i][0].price));
+              let helperPrice = isNaN(Number.parseFloat(products[i][0].price)) === false ? Number.parseFloat(products[i][0].price) : Number.parseFloat(0);
+              t = parseFloat(t) + (parseFloat(products[i].length) * parseFloat(helperPrice));
             }
             setTotal(Number.parseFloat(t).toFixed(2));
             setdataProducts(...dataProducts,products);
@@ -201,12 +202,12 @@ const ShoppingCartScreen = ({navigation}) => {
               <View>
                 <View style={{flex: 1, flexDirection: 'row', padding: 15, backgroundColor: '#FFF'}}>
                   <View style={{width: '30%'}}>
-                    <Image source={{uri: item[0].images[0].src}} style={styles.image}/>
+                    <Image source={{uri: item[0].images.length > 0 ? item[0].images[0].src : 'https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png'}} style={styles.image}/>
                   </View>
                   <View style={{width: '70%'}}>
                     <Text>Product: {item[0].name}</Text>
                     <Text>
-                      Price: ${Number.parseFloat(item[0].price).toFixed(2)}
+                      Price: ${isNaN(Number.parseFloat(item[0].price).toFixed(2)) === false ? Number.parseFloat(item[0].price).toFixed(2) : Number.parseFloat(0).toFixed(2)}
                     </Text>
                     <Text>Quantity: {item.length}</Text>
                   </View>
