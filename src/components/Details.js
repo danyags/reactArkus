@@ -124,7 +124,6 @@ const Details = ({route, navigation}) => {
                                         <Text onPress={() => {changeElement(item)}}
                                               style={{ textAlign: 'center' }} category="h6" >
                                             {item.name}
-                                            {item.id}
                                         </Text>
                                         <Text style={{ textAlign: 'center' }} category="s2">
                                             $ {isNaN(Number.parseFloat(item.price).toFixed(2)) === false ? Number.parseFloat(item.price).toFixed(2) : Number.parseFloat(0).toFixed(2)}
