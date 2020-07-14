@@ -2,7 +2,7 @@
 //import liraries
 //import libraries
 import React from 'react';
-import {StyleSheet, SafeAreaView, FlatList, View, Image, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView, FlatList, View, Image, Alert, Platform} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem, List, ListItem, Modal, Card, Input, Radio, RadioGroup} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
@@ -95,8 +95,8 @@ const ShoppingCartScreen = ({navigation}) => {
           clearCart();
           //setVisibleModal(true);
           //alert('Order complete');
-          analytics().logEvent('CompleteOrder',{Event: 'Completed order',description: 'User bougth some products',Platform: 'iOS',Date:Moment().format(),Products:productItems});
-          cmFunction.addEventToElastic({'Event':'Completed order','Description':'User bougth some products','Platform':'iOS','Date':Moment().format(),'Products':productItems});          
+          analytics().logEvent('CompleteOrder',{Event: 'Completed order',description: 'User bougth some products',Platform: String(Platform.OS),Date:Moment().format(),Products:productItems});
+          cmFunction.addEventToElastic({'Event':'Completed order','Description':'User bougth some products','Platform':String(Platform.OS),'Date':Moment().format(),'Products':productItems});          
           Alert.alert(
             'Purchase order',
             'Your order was created',

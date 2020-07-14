@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 //import libraries
 import React from 'react';
-import {StyleSheet, SafeAreaView, FlatList, View, Image} from 'react-native';
+import {StyleSheet, SafeAreaView, FlatList, View, Image, Platform} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
@@ -69,8 +69,8 @@ const MainScreen  = ({navigation})  => {
       {
         setPendingProcess(false);
         //User listed all products
-        analytics().logEvent('ListedAllProducts',{Event: 'Listed all products',description: 'User saw all products',Platform: 'iOS',Date:Moment().format()});
-        cmFunction.addEventToElastic({'Event':'Listed all products','Description':'User saw all products','Platform':'iOS','Date':Moment().format()});           
+        analytics().logEvent('ListedAllProducts',{Event: 'Listed all products',description: 'User saw all products',Platform: String(Platform.OS),Date:Moment().format()});
+        cmFunction.addEventToElastic({'Event':'Listed all products','Description':'User saw all products','Platform':String(Platform.OS),'Date':Moment().format()});           
       }
     })
     .catch((error) => {
@@ -85,8 +85,8 @@ const MainScreen  = ({navigation})  => {
   };
 
   const clearCart = async () =>{
-    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',description: 'User clear the shopping cart',Platform: 'iOS',Date:Moment().format(),Products:shoppingCart});
-    cmFunction.addEventToElastic({'Event':'Empty shopping cart','Description':'User clear the shopping cart','Platform':'iOS','Date':Moment().format(),'Products':shoppingCart});    
+    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',description: 'User clear the shopping cart',Platform: String(Platform.OS),Date:Moment().format(),Products:shoppingCart});
+    cmFunction.addEventToElastic({'Event':'Empty shopping cart','Description':'User clear the shopping cart','Platform':String(Platform.OS),'Date':Moment().format(),'Products':shoppingCart});    
     setShoppingCart([]);
     await AsyncStorage.setItem('startShopping','clear');
     toggleMenu();  
@@ -173,8 +173,8 @@ const MainScreen  = ({navigation})  => {
     };
     initVars();
     getProducts(page);
-    analytics().logEvent('openApp',{Event: 'Open app',description: 'Load products',Platform: 'iOS',Date:Moment().format()});
-    cmFunction.addEventToElastic({'Event':'Open app','Description':'Load products','Platform':'iOS','Date':Moment().format()});
+    analytics().logEvent('openApp',{Event: 'Open app',description: 'Load products',Platform: String(Platform.OS),Date:Moment().format()});
+    cmFunction.addEventToElastic({'Event':'Open app','Description':'Load products','Platform':String(Platform.OS),'Date':Moment().format()});
   },[]);
 
   return (
