@@ -85,11 +85,11 @@ const MainScreen  = ({navigation})  => {
   };
 
   const clearCart = async () =>{
+    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',description: 'User clear the shopping cart',Platform: 'iOS',Date:Moment().format(),Products:shoppingCart});
+    cmFunction.addEventToElastic({'Event':'Empty shopping cart','Description':'User clear the shopping cart','Platform':'iOS','Date':Moment().format(),'Products':shoppingCart});    
     setShoppingCart([]);
     await AsyncStorage.setItem('startShopping','clear');
-    toggleMenu();
-    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',description: 'User clear the shopping cart',Platform: 'iOS',Date:Moment().format(),Products:shoppingCart});
-    cmFunction.addEventToElastic({'Event':'Empty shopping cart','Description':'User clear the shopping cart','Platform':'iOS','Date':Moment().format(),'Products':shoppingCart});      
+    toggleMenu();  
   };
 
   const toggleMenu = () => {
