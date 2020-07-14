@@ -47,3 +47,39 @@ export function getCountryData(code){
         console.log('Error getting country data => ' + error);
     });
 }
+
+/*export function addEventToElastic(data){
+    return fetch(Constants.ELASTIC_SEARCH_HOST + Constants.ELASTIC_SEARCH_INDEX + '/_doc', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    .then((response) => {
+        return response;
+    })
+    .catch((error) => {
+        console.log('Error saving event on ElasticSearch => ' + error);
+    });   
+}*/
+
+export async function addEventToElastic(data){
+    try {
+        const response = await fetch(Constants.ELASTIC_SEARCH_HOST + Constants.ELASTIC_SEARCH_INDEX + '/_doc', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        return result;
+    }
+    catch (error) {
+        console.log('Error saving event on ElasticSearch => ' + error);
+    }   
+}

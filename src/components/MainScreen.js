@@ -9,6 +9,7 @@ import Details from './Details';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CartContext} from '../constant/Context';
 import analytics from '@react-native-firebase/analytics';
+import * as cmFunction from '../constant/CommonFunctions';
 
 const cartIcon = (props) =>(
   //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
@@ -66,6 +67,9 @@ const MainScreen  = ({navigation})  => {
       else
       {
         setPendingProcess(false);
+        //User listed all products
+        analytics().logEvent('ListedAllProducts',{Event: 'Listed all products',description: 'User saw all products',Platform: 'iOS'});
+        cmFunction.addEventToElastic({'Event':'Listed all products','Description':'User saw all products','Platform':'iOS'});           
       }
     })
     .catch((error) => {
@@ -83,6 +87,8 @@ const MainScreen  = ({navigation})  => {
     setShoppingCart([]);
     await AsyncStorage.setItem('startShopping','clear');
     toggleMenu();
+    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',description: 'User clear the shopping cart',Platform: 'iOS',Products:shoppingCart});
+    cmFunction.addEventToElastic({'Event':'Empty shopping cart','Description':'User clear the shopping cart','Platform':'iOS','Products':shoppingCart});      
   };
 
   const toggleMenu = () => {
@@ -166,11 +172,8 @@ const MainScreen  = ({navigation})  => {
     };
     initVars();
     getProducts(page);
-    analytics().logEvent('openApp',
-    {
-      Event: 'Open app',
-      description: 'Load products',
-    });
+    analytics().logEvent('openApp',{Event: 'Open app',description: 'Load products',Platform: 'iOS'});
+    cmFunction.addEventToElastic({'Event':'Open app','Description':'Load products','Platform':'iOS'});
   },[]);
 
   return (

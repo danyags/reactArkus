@@ -8,6 +8,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CartContext} from '../constant/Context';
+import analytics from '@react-native-firebase/analytics';
 import * as cmFunction from '../constant/CommonFunctions';
 
 const BackIcon = (props) => (
@@ -93,6 +94,8 @@ const ShoppingCartScreen = ({navigation}) => {
           clearCart();
           //setVisibleModal(true);
           //alert('Order complete');
+          analytics().logEvent('CompleteOrder',{Event: 'Completed order',description: 'User bougth some products',Platform: 'iOS',Products:productItems});
+          cmFunction.addEventToElastic({'Event':'Completed order','Description':'User bougth some products','Platform':'iOS','Products':productItems});          
           Alert.alert(
             'Purchase order',
             'Your order was created',

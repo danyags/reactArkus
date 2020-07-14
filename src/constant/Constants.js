@@ -10,3 +10,7 @@ export const GET_PRODUCTS = 'wp-json/wc/v3/products';
 export const CREATE_ORDER = 'wp-json/wc/v3/orders';
 export const GET_COUNTRIES = 'wp-json/wc/v3/data/countries';
 export const GET_COUNTRY_DATA = 'wp-json/wc/v3/data/countries/'; // add country code
+
+//ELASTIC SEARCH INFO
+export const ELASTIC_SEARCH_HOST = 'https://nv0rjy2lbt:5dt7uyl4cf@testingstore-6677590549.us-east-1.bonsaisearch.net:443/';
+export const ELASTIC_SEARCH_INDEX = 'test_tore';
