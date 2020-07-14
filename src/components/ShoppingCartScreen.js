@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {CartContext} from '../constant/Context';
 import analytics from '@react-native-firebase/analytics';
 import * as cmFunction from '../constant/CommonFunctions';
+import Moment from 'moment';
 
 const BackIcon = (props) => (
     <Icon {...props} name='arrow-back'/>
@@ -94,8 +95,8 @@ const ShoppingCartScreen = ({navigation}) => {
           clearCart();
           //setVisibleModal(true);
           //alert('Order complete');
-          analytics().logEvent('CompleteOrder',{Event: 'Completed order',description: 'User bougth some products',Platform: 'iOS',Products:productItems});
-          cmFunction.addEventToElastic({'Event':'Completed order','Description':'User bougth some products','Platform':'iOS','Products':productItems});          
+          analytics().logEvent('CompleteOrder',{Event: 'Completed order',description: 'User bougth some products',Platform: 'iOS',Date:Moment().format(),Products:productItems});
+          cmFunction.addEventToElastic({'Event':'Completed order','Description':'User bougth some products','Platform':'iOS','Date':Moment().format(),'Products':productItems});          
           Alert.alert(
             'Purchase order',
             'Your order was created',
