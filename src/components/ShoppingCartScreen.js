@@ -2,7 +2,7 @@
 //import liraries
 //import libraries
 import React from 'react';
-import {StyleSheet, SafeAreaView, FlatList, View, Image} from 'react-native';
+import {StyleSheet, SafeAreaView, FlatList, View, Image, Alert} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem, List, ListItem, Modal, Card, Input, Radio, RadioGroup} from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import * as Constants from '../constant/Constants';
@@ -91,7 +91,16 @@ const ShoppingCartScreen = ({navigation}) => {
         if (response.hasOwnProperty('id'))
         {
           clearCart();
-          setVisibleModal(true);
+          //setVisibleModal(true);
+          //alert('Order complete');
+          Alert.alert(
+            'Purchase order',
+            'Your order was created',
+            [
+              { text: 'OK', onPress: () => console.log('OK Pressed') }
+            ],
+            { cancelable: false }
+          );
         }
     })
     .catch((error) => {
@@ -235,7 +244,7 @@ const ShoppingCartScreen = ({navigation}) => {
                     status="basic"
                     appearance="outline"
                     accessoryRight={checkOutIcon}
-                    onPress={() => checkoutProduct()}>
+                    onPress={() => purchaseProduct(dataProducts)}>
                     Checkout
                   </Button>
                 </View>
