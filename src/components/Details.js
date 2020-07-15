@@ -1,13 +1,14 @@
+/* eslint-disable prettier/prettier */
+//import libraries
+
 import React from 'react';
 import {StyleSheet, SafeAreaView, FlatList, View, Image,ScrollView,VirtualizedList,TouchableOpacity,ToastAndroid  } from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {EvaIconsPack} from "@ui-kitten/eva-icons";
 import * as Constants from "../constant/Constants";
 import AsyncStorage from "@react-native-community/async-storage";
 import {CartContext} from "../constant/Context";
-import LoadingScreen from "./LoadingScreen";
+
 
 const Details = ({route, navigation}) => {
     var {item} = route.params;
