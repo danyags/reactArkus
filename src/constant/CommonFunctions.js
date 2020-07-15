@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Constants from './Constants';
+import Base64 from './Base64';
 
 //var hmacsha1 = require('hmacsha1');
 
@@ -48,11 +49,11 @@ export function getCountryData(code){
     });
 }
 
-/*export function addEventToElastic(data){
+export function addEventToElastic(data){
     return fetch(Constants.ELASTIC_SEARCH_HOST + Constants.ELASTIC_SEARCH_INDEX + '/_doc', {
         method: 'POST',
         headers: {
-            Accept: 'application/json',
+            'Authorization': 'Basic ' + Base64.btoa(String(Constants.ELASTIC_SECRET)),
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
@@ -64,14 +65,14 @@ export function getCountryData(code){
     .catch((error) => {
         console.log('Error saving event on ElasticSearch => ' + error);
     });   
-}*/
+}
 
-export async function addEventToElastic(data){
+/*export async function addEventToElastic(data){
     try {
         const response = await fetch(Constants.ELASTIC_SEARCH_HOST + Constants.ELASTIC_SEARCH_INDEX + '/_doc', {
             method: 'POST',
             headers: {
-                Accept: 'application/json',
+                'Authorization': 'Basic ' + Base64.btoa(String(Constants.ELASTIC_SECRET)),
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
@@ -82,4 +83,4 @@ export async function addEventToElastic(data){
     catch (error) {
         console.log('Error saving event on ElasticSearch => ' + error);
     }   
-}
+}*/
