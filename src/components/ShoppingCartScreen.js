@@ -12,6 +12,8 @@ import analytics from '@react-native-firebase/analytics';
 import * as cmFunction from '../constant/CommonFunctions';
 import Moment from 'moment';
 
+var initNav = Moment(Moment().format('YYYY-MM-DD HH:mm:ss'),'HH:mm:ss a');
+
 const BackIcon = (props) => (
     <Icon {...props} name='arrow-back'/>
 );
@@ -39,6 +41,12 @@ const ShoppingCartScreen = ({navigation}) => {
   const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={()=>backAction()}/>;
 
   const backAction = () =>{
+    //Calculate time on screen
+    var endNav = Moment(Moment().format('YYYY-MM-DD HH:mm:ss'),'HH:mm:ss a');
+    var duration = Moment.duration(endNav.diff(initNav));
+    var timeinSeconds = duration.asSeconds();
+    analytics().logEvent('ShoppingCartScreen',{Event: 'Shopping cart screen',Description: 'User surfed on shopping cart screen',Platform: String(Platform.OS),Date:Moment().format(),TimeOnScreen:timeinSeconds});
+    cmFunction.addEventToElastic({'Event':'Shopping cart screen','Description':'User surfed on shopping cart screen','Platform':String(Platform.OS),'Date':Moment().format(),'TimeOnScreen':timeinSeconds});            
     navigation.goBack();
   };
 

@@ -12,6 +12,8 @@ import analytics from '@react-native-firebase/analytics';
 import * as cmFunction from '../constant/CommonFunctions';
 import Moment from 'moment';
 
+var initNav = Moment(Moment().format('YYYY-MM-DD HH:mm:ss'),'HH:mm:ss a');
+
 const cartIcon = (props) =>(
   //<Icon style={{width:24,height:24}} fill='#000' name='shopping-cart-outline'></Icon>
   <Icon {...props} name='shopping-cart-outline'/>
@@ -69,7 +71,7 @@ const MainScreen  = ({navigation})  => {
       {
         setPendingProcess(false);
         //User listed all products
-        analytics().logEvent('ListedAllProducts',{Event: 'Listed all products',description: 'User saw all products',Platform: String(Platform.OS),Date:Moment().format()});
+        analytics().logEvent('ListedAllProducts',{Event: 'Listed all products',Description: 'User saw all products',Platform: String(Platform.OS),Date:Moment().format()});
         cmFunction.addEventToElastic({'Event':'Listed all products','Description':'User saw all products','Platform':String(Platform.OS),'Date':Moment().format()});           
       }
     })
@@ -85,7 +87,7 @@ const MainScreen  = ({navigation})  => {
   };
 
   const clearCart = async () =>{
-    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',description: 'User clear the shopping cart',Platform: String(Platform.OS),Date:Moment().format(),Products:shoppingCart});
+    analytics().logEvent('EmptyShoppingCart',{Event: 'Empty shopping cart',Description: 'User clear the shopping cart',Platform: String(Platform.OS),Date:Moment().format(),Products:shoppingCart});
     cmFunction.addEventToElastic({'Event':'Empty shopping cart','Description':'User clear the shopping cart','Platform':String(Platform.OS),'Date':Moment().format(),'Products':shoppingCart});    
     setShoppingCart([]);
     await AsyncStorage.setItem('startShopping','clear');
@@ -97,6 +99,12 @@ const MainScreen  = ({navigation})  => {
   };
 
   const goToMyCart = () =>{
+    //Calculate time on screen
+    var endNav = Moment(Moment().format('YYYY-MM-DD HH:mm:ss'),'HH:mm:ss a');
+    var duration = Moment.duration(endNav.diff(initNav));
+    var timeinSeconds = duration.asSeconds();
+    analytics().logEvent('ProductScreen',{Event: 'Product screen',Description: 'User surfed on product screen',Platform: String(Platform.OS),Date:Moment().format(),TimeOnScreen:timeinSeconds});
+    cmFunction.addEventToElastic({'Event':'Product screen','Description':'User surfed on product screen','Platform':String(Platform.OS),'Date':Moment().format(),'TimeOnScreen':timeinSeconds});        
     setMenuVisible(!menuVisible);
     navigation.navigate('ShoppingCartScreen');
   };
