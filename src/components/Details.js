@@ -1,13 +1,28 @@
+/* eslint-disable prettier/prettier */
+//import libraries
+
 import React from 'react';
-import {StyleSheet, SafeAreaView, FlatList, View, Image,ScrollView,VirtualizedList,TouchableOpacity,ToastAndroid  } from 'react-native';
+import {
+    StyleSheet,
+    SafeAreaView,
+    FlatList,
+    View,
+    Image,
+    ScrollView,
+    VirtualizedList,
+    TouchableOpacity,
+    ToastAndroid,
+    Platform
+} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {EvaIconsPack} from "@ui-kitten/eva-icons";
 import * as Constants from "../constant/Constants";
 import AsyncStorage from "@react-native-community/async-storage";
 import {CartContext} from "../constant/Context";
-import LoadingScreen from "./LoadingScreen";
+import analytics from "@react-native-firebase/analytics";
+import Moment from "moment";
+import * as cmFunction from "../constant/CommonFunctions";
+
 
 const Details = ({route, navigation}) => {
     var {item} = route.params;
@@ -75,6 +90,8 @@ const Details = ({route, navigation}) => {
 
     React.useEffect(()=>{
         related();
+        analytics().logEvent('Details',{Event: 'See details',description: 'User See details',Platform: String(Platform.OS),Date:Moment().format(),Product_Id: element.id });
+        cmFunction.addEventToElastic({'Event':'See details','Description':'User See details','Platform':String(Platform.OS),'Date':Moment().format(),'Product_Id': element.id});
     },[]);
 
     React.useEffect(()=>{
@@ -82,7 +99,7 @@ const Details = ({route, navigation}) => {
     },[element]);
 
     React.useEffect(()=>{
-        console.log('RELATED ' + dataRelated.length);
+        // console.log('RELATED ' + dataRelated.length);
     },[dataRelated]);
 
     return (
@@ -114,7 +131,7 @@ const Details = ({route, navigation}) => {
                         <FlatList
                             data={dataRelated.length > 0 ? dataRelated : []}
                             numColumns={2}
-                            contentContainerStyle={{ paddingBottom: 50 }}
+                            contentContainerStyle={{ paddingBottom: '30%' }}
                             renderItem={({ item }) => (
                                 <View style={{ flex: 1, flexDirection: 'row', padding: 5 }}>
                                     <View onPress={() => { navigation.navigate('Details', { item: item }) }} style={{ width: '100%', height: 250, backgroundColor: '#FFF', borderColor: '#bdbdbd', borderRadius: 5, borderWidth: 1, padding: 5, }}>
