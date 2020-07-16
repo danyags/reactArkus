@@ -27,19 +27,13 @@ import * as cmFunction from "../constant/CommonFunctions";
 const Details = ({route, navigation}) => {
     var {item} = route.params;
     const [dataRelated, setdataRelated] = React.useState([]);
-    //const [dataNewRel, setdataNewRel] = React.useState([]);
-    //const [item1, setItem] = React.useState();
-    //const [itemId, setItemId] = React.useState();
-    //const [isLoaded, setIsLoaded] = React.useState(false);
     const [shoppingCart, setShoppingCart] = React.useContext(CartContext);
     const [element, setElement] = React.useState(item);
-    //const [flag, setFlag] = React.useState(false);
 
     const BackIcon = (props) => (
         <Icon {...props} name='arrow-back' />
     );
     const BackAction = () => (
-
         <TopNavigationAction icon={BackIcon} onPress={() => {navigation.navigate('MainScreen')}}/>
     );
     const regex = /(<([^>]+)>)/ig;
@@ -80,6 +74,8 @@ const Details = ({route, navigation}) => {
     const addToCart = async (i) => {
         setShoppingCart([...shoppingCart,i]);
         await AsyncStorage.setItem('startShopping','add');
+        analytics().logEvent('Details',{Event: 'Product added to cart',description: 'User add product from Details screen',Platform: String(Platform.OS),Date:Moment().format(),Product_Id: element.id });
+        cmFunction.addEventToElastic({'Event':'Product added to cart','Description':'User add product from Details screen','Platform':String(Platform.OS),'Date':Moment().format(),'Product_Id': element.id});
     };
 
     const changeElement = async (i) => {
