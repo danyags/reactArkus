@@ -2,18 +2,7 @@
 //import libraries
 
 import React from 'react';
-import {
-    StyleSheet,
-    SafeAreaView,
-    FlatList,
-    View,
-    Image,
-    ScrollView,
-    VirtualizedList,
-    TouchableOpacity,
-    ToastAndroid,
-    Platform
-} from 'react-native';
+import {StyleSheet, SafeAreaView, FlatList, View, Image, ScrollView, VirtualizedList, TouchableOpacity, ToastAndroid, Platform} from 'react-native';
 import {Layout, Text, Button, Icon, IconRegistry, TopNavigation, Divider, Spinner, TopNavigationAction, OverflowMenu, MenuItem} from '@ui-kitten/components';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Constants from "../constant/Constants";
@@ -23,6 +12,7 @@ import analytics from "@react-native-firebase/analytics";
 import Moment from "moment";
 import * as cmFunction from "../constant/CommonFunctions";
 
+var initNav = Moment(Moment().format('YYYY-MM-DD HH:mm:ss'),'HH:mm:ss a');
 
 const Details = ({route, navigation}) => {
     var {item} = route.params;
@@ -30,12 +20,25 @@ const Details = ({route, navigation}) => {
     const [shoppingCart, setShoppingCart] = React.useContext(CartContext);
     const [element, setElement] = React.useState(item);
 
+
+
     const BackIcon = (props) => (
         <Icon {...props} name='arrow-back' />
     );
+
     const BackAction = () => (
-        <TopNavigationAction icon={BackIcon} onPress={() => {navigation.navigate('MainScreen')}}/>
+        <TopNavigationAction icon={BackIcon} onPress={() => NavBack()}/>
     );
+
+    const NavBack = () =>
+    {
+        var endNav = Moment(Moment().format('YYYY-MM-DD HH:mm:ss'),'HH:mm:ss a');
+        var duration = Moment.duration(endNav.diff(initNav));
+        var timeinSeconds = duration.asSeconds();
+        analytics().logEvent('Details',{Event: 'Details screen',Description: 'User surfed on details screen',Platform: String(Platform.OS),Date:Moment().format(),TimeOnScreen:timeinSeconds});
+        cmFunction.addEventToElastic({'Event':'Details screen','Description':'User surfed on details screen','Platform':String(Platform.OS),'Date':Moment().format(),'TimeOnScreen':timeinSeconds});
+        navigation.navigate('MainScreen');
+    }
     const regex = /(<([^>]+)>)/ig;
 
     const related = async () =>{
